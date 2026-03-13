@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { DownloadCard } from "@/components/DownloadCard";
 
 interface User {
   id: string;
@@ -21,7 +20,7 @@ export default function DashboardPage() {
   const [showAddUser, setShowAddUser] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [newUser, setNewUser] = useState({ username: "", password: "", expires: "never", customDate: "" });
+  const [newUser, setNewUser] = useState({ expires: "never", customDate: "" });
   const [editUser, setEditUser] = useState({ username: "", password: "", expires: "never", customDate: "" });
   const [appName, setAppName] = useState("MR Key");
   const [activeTab, setActiveTab] = useState("overview");
@@ -70,8 +69,8 @@ export default function DashboardPage() {
 
     const newUserData: User = {
       id: Date.now().toString(),
-      username: newUser.username,
-      password: newUser.password,
+      username: "Not Registered",
+      password: "Not Registered",
       key: key,
       createdAt: new Date().toISOString().split("T")[0],
       expires: expireDate,
@@ -82,7 +81,7 @@ export default function DashboardPage() {
     setUsers(updatedUsers);
     localStorage.setItem("app_users", JSON.stringify(updatedUsers));
 
-    setNewUser({ username: "", password: "", expires: "never", customDate: "" });
+    setNewUser({ expires: "never", customDate: "" });
     setShowAddUser(false);
     setLoading(false);
   };
@@ -191,19 +190,13 @@ export default function DashboardPage() {
             onClick={() => setActiveTab("keys")}
             className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "keys" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
-            Keys
+            Users
           </button>
           <button
             onClick={() => setActiveTab("settings")}
             className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "settings" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
             Settings
-          </button>
-          <button
-            onClick={() => setActiveTab("downloads")}
-            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "downloads" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
-          >
-            Downloads
           </button>
         </nav>
 
@@ -284,7 +277,7 @@ export default function DashboardPage() {
           <>
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h1 className="text-3xl font-bold">License Keys</h1>
+                <h1 className="text-3xl font-bold">Users</h1>
                 <p className="text-gray-400">Manage your license keys</p>
               </div>
               <button
@@ -379,10 +372,11 @@ export default function DashboardPage() {
                     <label className="block text-sm font-medium mb-2">Application Name</label>
                     <input
                       type="text"
-                      value={appName}
-                      onChange={(e) => setAppName(e.target.value)}
-                      className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                      value="MR Key"
+                      readOnly
+                      className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg text-gray-400"
                     />
+                    <p className="text-xs text-gray-500 mt-1">Application name cannot be changed</p>
                   </div>
                 </div>
               </div>
@@ -423,78 +417,13 @@ export default function DashboardPage() {
                       className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg text-gray-400 font-mono"
                     />
                   </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </>
-        )}
-
-        {/* Downloads Tab */}
-        {activeTab === "downloads" && (
-          <>
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold">Downloads</h1>
-              <p className="text-gray-400">Download authentication SDK for your software</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <DownloadCard 
-                title="C# (.NET)"
-                language="csharp"
-                icon="C#"
-                description="For C# applications (.NET Framework/Core)"
-                appName={appName}
-              />
-              <DownloadCard 
-                title="Python"
-                language="python"
-                icon="🐍"
-                description="For Python applications"
-                appName={appName}
-              />
-              <DownloadCard 
-                title="Node.js"
-                language="nodejs"
-                icon="📦"
-                description="For Node.js/JavaScript applications"
-                appName={appName}
-              />
-              <DownloadCard 
-                title="PHP"
-                language="php"
-                icon="🐘"
-                description="For PHP applications"
-                appName={appName}
-              />
-              <DownloadCard 
-                title="VB.NET"
-                language="vbnet"
-                icon="VB"
-                description="For VB.NET applications"
-                appName={appName}
-              />
-              <DownloadCard 
-                title="Java"
-                language="java"
-                icon="☕"
-                description="For Java applications"
-                appName={appName}
-              />
-            </div>
-
-            <div className="mt-8 bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6">
-              <h3 className="text-lg font-semibold mb-4">How to use</h3>
-              <ol className="list-decimal list-inside space-y-2 text-gray-300">
-                <li>Download the SDK for your programming language</li>
-                <li>Extract the files to your project folder</li>
-                <li>Open the code and replace <code className="bg-[#121218] px-2 py-1 rounded text-cyan-400">APP_NAME</code> with your app name: <span className="text-indigo-400 font-mono">{appName}</span></li>
-                <li>Build and run your application</li>
-              </ol>
-            </div>
-          </>
+            </>
         )}
       </div>
-
+ 
       {/* Add User Modal */}
       {showAddUser && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -503,26 +432,6 @@ export default function DashboardPage() {
               Generate New Key
             </h2>
             <form onSubmit={handleCreateUser} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Username</label>
-                <input
-                  type="text"
-                  value={newUser.username}
-                  onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Password</label>
-                <input
-                  type="password"
-                  value={newUser.password}
-                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
-                  required
-                />
-              </div>
               <div>
                 <label className="block text-sm font-medium mb-2">License Duration</label>
                 <select

@@ -1,27 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+interface User {
+  id: string;
+  username: string;
+  password: string;
+  key: string;
+  createdAt: string;
+  expires: string;
+  level: number;
+}
+
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const storedUsers = localStorage.getItem("app_users");
+    if (storedUsers) {
+      setUsers(JSON.parse(storedUsers));
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Mock login - accept any email/password
-    if (email && password) {
-      localStorage.setItem("user", JSON.stringify({ email, name: email.split("@")[0] }));
+    if (!username || !password) {
+      setError("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
+    const foundUser = users.find(
+      (u) => u.username.toLowerCase() === username.toLowerCase() && u.password === password
+    );
+
+    if (foundUser) {
+      localStorage.setItem("user", JSON.stringify({ 
+        username: foundUser.username, 
+        name: foundUser.username,
+        key: foundUser.key 
+      }));
       router.push("/app");
     } else {
-      setError("Please fill in all fields");
+      setError("Invalid username or password");
     }
     setLoading(false);
   };
@@ -43,13 +74,13 @@ export default function LoginPage() {
         <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Email</label>
+              <label className="block text-sm font-medium mb-2">Username</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
-                placeholder="Enter your email"
+                placeholder="Enter your username"
               />
             </div>
             <div>
@@ -63,7 +94,11 @@ export default function LoginPage() {
               />
             </div>
 
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                <p className="text-red-400 text-sm text-center">{error}</p>
+              </div>
+            )}
 
             <button
               type="submit"
