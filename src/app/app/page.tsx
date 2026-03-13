@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { DownloadCard } from "@/components/DownloadCard";
 
 interface User {
   id: string;
@@ -197,6 +198,12 @@ export default function DashboardPage() {
             className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "settings" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
             Settings
+          </button>
+          <button
+            onClick={() => setActiveTab("downloads")}
+            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "downloads" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
+          >
+            Downloads
           </button>
         </nav>
 
@@ -421,6 +428,70 @@ export default function DashboardPage() {
                 </div>
               </div>
             </>
+        )}
+
+        {/* Downloads Tab */}
+        {activeTab === "downloads" && (
+          <>
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold">Downloads</h1>
+              <p className="text-gray-400">Download authentication code for your software</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <DownloadCard 
+                title="C# (.NET)"
+                language="csharp"
+                icon="C#"
+                description="For C# applications"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="Python"
+                language="python"
+                icon="🐍"
+                description="For Python applications"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="Node.js"
+                language="nodejs"
+                icon="📦"
+                description="For Node.js applications"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="PHP"
+                language="php"
+                icon="🐘"
+                description="For PHP applications"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="VB.NET"
+                language="vbnet"
+                icon="VB"
+                description="For VB.NET applications"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="Java"
+                language="java"
+                icon="☕"
+                description="For Java applications"
+                appName={appName}
+              />
+            </div>
+
+            <div className="mt-8 bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6">
+              <h3 className="text-lg font-semibold mb-4">How to use</h3>
+              <ol className="list-decimal list-inside space-y-2 text-gray-300">
+                <li>Download the code for your programming language</li>
+                <li>Add the file to your project</li>
+                <li>Use the authentication functions in your software</li>
+              </ol>
+            </div>
+          </>
         )}
       </div>
  
