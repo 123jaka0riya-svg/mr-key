@@ -19,7 +19,10 @@ export default function DashboardPage() {
   const [user, setUser] = useState<{ email: string; name: string } | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [showAddUser, setShowAddUser] = useState(false);
-  const [newUser, setNewUser] = useState({ username: "", password: "", expires: "never" });
+  const [showEditUser, setShowEditUser] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [newUser, setNewUser] = useState({ username: "", password: "", expires: "never", customDate: "" });
+  const [editUser, setEditUser] = useState({ username: "", password: "", expires: "never", customDate: "" });
   const [appName, setAppName] = useState("MR Key");
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
@@ -43,13 +46,35 @@ export default function DashboardPage() {
     setLoading(true);
 
     const key = generateKey();
+    let expireDate = newUser.expires === "never" ? "Never" : newUser.expires;
+    
+    if (newUser.expires === "custom" && newUser.customDate) {
+      expireDate = newUser.customDate;
+    } else if (newUser.expires === "1day") {
+      const date = new Date();
+      date.setDate(date.getDate() + 1);
+      expireDate = date.toISOString().split("T")[0];
+    } else if (newUser.expires === "7days") {
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
+      expireDate = date.toISOString().split("T")[0];
+    } else if (newUser.expires === "30days") {
+      const date = new Date();
+      date.setDate(date.getDate() + 30);
+      expireDate = date.toISOString().split("T")[0];
+    } else if (newUser.expires === "1year") {
+      const date = new Date();
+      date.setFullYear(date.getFullYear() + 1);
+      expireDate = date.toISOString().split("T")[0];
+    }
+
     const newUserData: User = {
       id: Date.now().toString(),
       username: newUser.username,
       password: newUser.password,
       key: key,
       createdAt: new Date().toISOString().split("T")[0],
-      expires: newUser.expires === "never" ? "Never" : newUser.expires,
+      expires: expireDate,
       level: 1,
     };
 
@@ -57,9 +82,68 @@ export default function DashboardPage() {
     setUsers(updatedUsers);
     localStorage.setItem("app_users", JSON.stringify(updatedUsers));
 
-    setNewUser({ username: "", password: "", expires: "never" });
+    setNewUser({ username: "", password: "", expires: "never", customDate: "" });
     setShowAddUser(false);
     setLoading(false);
+  };
+
+  const handleEditUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    setLoading(true);
+
+    let expireDate = editUser.expires === "never" ? "Never" : editUser.expires;
+    
+    if (editUser.expires === "custom" && editUser.customDate) {
+      expireDate = editUser.customDate;
+    } else if (editUser.expires === "1day") {
+      const date = new Date();
+      date.setDate(date.getDate() + 1);
+      expireDate = date.toISOString().split("T")[0];
+    } else if (editUser.expires === "7days") {
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
+      expireDate = date.toISOString().split("T")[0];
+    } else if (editUser.expires === "30days") {
+      const date = new Date();
+      date.setDate(date.getDate() + 30);
+      expireDate = date.toISOString().split("T")[0];
+    } else if (editUser.expires === "1year") {
+      const date = new Date();
+      date.setFullYear(date.getFullYear() + 1);
+      expireDate = date.toISOString().split("T")[0];
+    }
+
+    const updatedUsers = users.map((u) => {
+      if (u.id === editingUser.id) {
+        return {
+          ...u,
+          username: editUser.username,
+          password: editUser.password,
+          expires: expireDate,
+        };
+      }
+      return u;
+    });
+
+    setUsers(updatedUsers);
+    localStorage.setItem("app_users", JSON.stringify(updatedUsers));
+
+    setShowEditUser(false);
+    setEditingUser(null);
+    setEditUser({ username: "", password: "", expires: "never", customDate: "" });
+    setLoading(false);
+  };
+
+  const openEditModal = (user: User) => {
+    setEditingUser(user);
+    setEditUser({
+      username: user.username,
+      password: user.password,
+      expires: "custom",
+      customDate: user.expires === "Never" ? "" : user.expires,
+    });
+    setShowEditUser(true);
   };
 
   const generateKey = () => {
@@ -102,12 +186,6 @@ export default function DashboardPage() {
             className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "overview" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
             Overview
-          </button>
-          <button
-            onClick={() => setActiveTab("users")}
-            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "users" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
-          >
-            Users
           </button>
           <button
             onClick={() => setActiveTab("keys")}
@@ -201,80 +279,6 @@ export default function DashboardPage() {
           </>
         )}
 
-        {/* Users Tab */}
-        {activeTab === "users" && (
-          <>
-            <div className="flex justify-between items-center mb-8">
-              <div>
-                <h1 className="text-3xl font-bold">User Management</h1>
-                <p className="text-gray-400">Manage your application users</p>
-              </div>
-              <button
-                onClick={() => setShowAddUser(true)}
-                className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold transition"
-              >
-                + Add User
-              </button>
-            </div>
-
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Search users by username..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 bg-[#1a1a22] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white placeholder-gray-500"
-              />
-            </div>
-
-            <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-[#18181f]">
-                  <tr>
-                    <th className="text-left p-4 text-gray-400 font-medium">Username</th>
-                    <th className="text-left p-4 text-gray-400 font-medium">Password</th>
-                    <th className="text-left p-4 text-gray-400 font-medium">Key</th>
-                    <th className="text-left p-4 text-gray-400 font-medium">Created</th>
-                    <th className="text-left p-4 text-gray-400 font-medium">Expires</th>
-                    <th className="text-left p-4 text-gray-400 font-medium">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="p-8 text-center text-gray-400">
-                        {searchQuery ? "No users found matching your search." : "No users yet. Click \"Add User\" to create one."}
-                      </td>
-                    </tr>
-                  ) : (
-                    users.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase())).map((u) => (
-                      <tr key={u.id} className="border-t border-[#2a2a3a] hover:bg-[#222230]">
-                        <td className="p-4 text-white">{u.username}</td>
-                        <td className="p-4 text-gray-400">{u.password}</td>
-                        <td className="p-4 font-mono text-sm text-cyan-400">{u.key}</td>
-                        <td className="p-4 text-gray-400">{u.createdAt}</td>
-                        <td className="p-4">
-                          <span className={u.expires === "Never" ? "text-green-400" : "text-gray-400"}>
-                            {u.expires}
-                          </span>
-                        </td>
-                        <td className="p-4">
-                          <button
-                            onClick={() => deleteUser(u.id)}
-                            className="text-red-400 hover:text-red-300 text-sm"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
-
         {/* Keys Tab */}
         {activeTab === "keys" && (
           <>
@@ -291,6 +295,16 @@ export default function DashboardPage() {
               </button>
             </div>
 
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Search keys by username..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 bg-[#1a1a22] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white placeholder-gray-500"
+              />
+            </div>
+
             <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl overflow-hidden">
               <table className="w-full">
                 <thead className="bg-[#18181f]">
@@ -300,17 +314,18 @@ export default function DashboardPage() {
                     <th className="text-left p-4 text-gray-400 font-medium">Status</th>
                     <th className="text-left p-4 text-gray-400 font-medium">Created</th>
                     <th className="text-left p-4 text-gray-400 font-medium">Expires</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {users.length === 0 ? (
+                  {users.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="p-8 text-center text-gray-400">
-                        No keys yet. Generate one to get started.
+                      <td colSpan={6} className="p-8 text-center text-gray-400">
+                        {searchQuery ? "No keys found matching your search." : "No keys yet. Generate one to get started."}
                       </td>
                     </tr>
                   ) : (
-                    users.map((u) => (
+                    users.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase())).map((u) => (
                       <tr key={u.id} className="border-t border-[#2a2a3a] hover:bg-[#222230]">
                         <td className="p-4 font-mono text-sm text-cyan-400">{u.key}</td>
                         <td className="p-4 text-white">{u.username}</td>
@@ -322,6 +337,22 @@ export default function DashboardPage() {
                           <span className={u.expires === "Never" ? "text-green-400" : "text-gray-400"}>
                             {u.expires}
                           </span>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex gap-3">
+                            <button
+                              onClick={() => openEditModal(u)}
+                              className="text-indigo-400 hover:text-indigo-300 text-sm"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => deleteUser(u.id)}
+                              className="text-red-400 hover:text-red-300 text-sm"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -469,7 +500,7 @@ export default function DashboardPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4 text-white">
-              {activeTab === "keys" ? "Generate New Key" : "Create New User"}
+              Generate New Key
             </h2>
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
@@ -493,7 +524,7 @@ export default function DashboardPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Expires</label>
+                <label className="block text-sm font-medium mb-2">License Duration</label>
                 <select
                   value={newUser.expires}
                   onChange={(e) => setNewUser({ ...newUser, expires: e.target.value })}
@@ -504,8 +535,21 @@ export default function DashboardPage() {
                   <option value="7days">7 Days</option>
                   <option value="30days">30 Days</option>
                   <option value="1year">1 Year</option>
+                  <option value="custom">Custom Date</option>
                 </select>
               </div>
+              {newUser.expires === "custom" && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">Select Expiry Date</label>
+                  <input
+                    type="date"
+                    value={newUser.customDate}
+                    onChange={(e) => setNewUser({ ...newUser, customDate: e.target.value })}
+                    className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                    min={new Date().toISOString().split("T")[0]}
+                  />
+                </div>
+              )}
               <div className="flex gap-4 pt-4">
                 <button
                   type="button"
@@ -520,6 +564,82 @@ export default function DashboardPage() {
                   className="flex-1 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold transition disabled:opacity-50"
                 >
                   {loading ? "Creating..." : "Create"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {showEditUser && editingUser && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4 text-white">
+              Edit Key
+            </h2>
+            <form onSubmit={handleEditUser} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Username</label>
+                <input
+                  type="text"
+                  value={editUser.username}
+                  onChange={(e) => setEditUser({ ...editUser, username: e.target.value })}
+                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Password</label>
+                <input
+                  type="password"
+                  value={editUser.password}
+                  onChange={(e) => setEditUser({ ...editUser, password: e.target.value })}
+                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">License Duration</label>
+                <select
+                  value={editUser.expires}
+                  onChange={(e) => setEditUser({ ...editUser, expires: e.target.value })}
+                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                >
+                  <option value="never">Never</option>
+                  <option value="1day">1 Day</option>
+                  <option value="7days">7 Days</option>
+                  <option value="30days">30 Days</option>
+                  <option value="1year">1 Year</option>
+                  <option value="custom">Custom Date</option>
+                </select>
+              </div>
+              {editUser.expires === "custom" && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">Select Expiry Date</label>
+                  <input
+                    type="date"
+                    value={editUser.customDate}
+                    onChange={(e) => setEditUser({ ...editUser, customDate: e.target.value })}
+                    className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                    min={new Date().toISOString().split("T")[0]}
+                  />
+                </div>
+              )}
+              <div className="flex gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => { setShowEditUser(false); setEditingUser(null); }}
+                  className="flex-1 py-2 bg-[#2a2a3a] hover:bg-[#3a3a4a] rounded-lg transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold transition disabled:opacity-50"
+                >
+                  {loading ? "Saving..." : "Save Changes"}
                 </button>
               </div>
             </form>
