@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, like } from "drizzle-orm";
 
 const generateKey = () => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -13,10 +13,14 @@ const generateKey = () => {
   return key;
 };
 
+const inMemoryUsers: any[] = [];
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { type, username, password, appname } = body;
+
+    const useDb = db !== null;
 
     if (type === "login") {
       if (!username || !password || !appname) {
@@ -26,12 +30,19 @@ export async function POST(request: Request) {
         );
       }
 
-      const result = await db
-        .select()
-        .from(users)
-        .where(eq(users.username, username.toLowerCase()));
+      let user: any = null;
 
-      const user = result.find(u => u.password === password && u.key);
+      if (useDb) {
+        const result = await db
+          .select()
+          .from(users)
+          .where(eq(users.username, username.toLowerCase()));
+        user = result.find((u: any) => u.password === password && u.key);
+      } else {
+        user = inMemoryUsers.find(
+          (u) => u.username.toLowerCase() === username.toLowerCase() && u.password === password && u.key
+        );
+      }
 
       if (user) {
         return NextResponse.json({
@@ -59,10 +70,17 @@ export async function POST(request: Request) {
         );
       }
 
-      const existing = await db
-        .select()
-        .from(users)
-        .where(eq(users.username, username.toLowerCase()));
+      let existing: any[] = [];
+      if (useDb) {
+        existing = await db
+          .select()
+          .from(users)
+          .where(eq(users.username, username.toLowerCase()));
+      } else {
+        existing = inMemoryUsers.filter(
+          (u) => u.username.toLowerCase() === username.toLowerCase()
+        );
+      }
 
       if (existing.length > 0) {
         return NextResponse.json(
@@ -72,24 +90,44 @@ export async function POST(request: Request) {
       }
 
       const key = generateKey();
-
-      await db.insert(users).values({
+      const newUser = {
         username: username.toLowerCase(),
         password,
         key,
         createdAt: new Date().toISOString().split("T")[0],
         expires: "Never",
         level: 1,
-      });
+      };
+
+      if (useDb) {
+        await db.insert(users).values(newUser);
+      } else {
+        inMemoryUsers.push({ id: Date.now().toString(), ...newUser });
+      }
 
       return NextResponse.json({
         success: true,
         message: "Registration successful",
         user: {
-          username: username.toLowerCase(),
-          key,
-          expires: "Never"
+          username: newUser.username,
+          key: newUser.key,
+          expires: newUser.expires
         }
+      });
+    }
+
+    if (type === "getUsers") {
+      let allUsers: any[] = [];
+      
+      if (useDb) {
+        allUsers = await db.select().from(users);
+      } else {
+        allUsers = inMemoryUsers;
+      }
+
+      return NextResponse.json({
+        success: true,
+        users: allUsers
       });
     }
 
