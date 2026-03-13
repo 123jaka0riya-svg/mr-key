@@ -27,7 +27,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0a0a0f] flex items-center justify-center px-4">
+    <main className="min-h-screen bg-[#121218] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
@@ -40,7 +40,7 @@ export default function RegisterPage() {
           <p className="text-gray-400">Get started with KeyAuth</p>
         </div>
 
-        <div className="bg-[#12121a] border border-[#1e1e2e] rounded-xl p-8">
+        <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-2">Name</label>
@@ -48,7 +48,7 @@ export default function RegisterPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 bg-[#0a0a0f] border border-[#1e1e2e] rounded-lg focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-3 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
                 placeholder="Enter your name"
               />
             </div>
@@ -58,7 +58,7 @@ export default function RegisterPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-[#0a0a0f] border border-[#1e1e2e] rounded-lg focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-3 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
                 placeholder="Enter your email"
               />
             </div>
@@ -68,7 +68,7 @@ export default function RegisterPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-[#0a0a0f] border border-[#1e1e2e] rounded-lg focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-3 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
                 placeholder="Create a password"
               />
             </div>

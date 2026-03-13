@@ -85,9 +85,9 @@ export default function DashboardPage() {
   if (!user) return null;
 
   return (
-    <main className="min-h-screen bg-[#0a0a0f]">
+    <main className="min-h-screen bg-[#121218]">
       {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 bg-[#12121a] border-r border-[#1e1e2e] p-4 flex flex-col">
+      <div className="fixed left-0 top-0 h-full w-64 bg-[#1a1a22] border-r border-[#2a2a3a] p-4 flex flex-col">
         <div className="flex items-center gap-2 mb-8">
           <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg">K</span>
@@ -98,31 +98,31 @@ export default function DashboardPage() {
         <nav className="flex-1 space-y-2">
           <button
             onClick={() => setActiveTab("overview")}
-            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "overview" ? "bg-indigo-500" : "hover:bg-[#1e1e2e]"}`}
+            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "overview" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
             Overview
           </button>
           <button
             onClick={() => setActiveTab("users")}
-            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "users" ? "bg-indigo-500" : "hover:bg-[#1e1e2e]"}`}
+            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "users" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
             Users
           </button>
           <button
             onClick={() => setActiveTab("keys")}
-            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "keys" ? "bg-indigo-500" : "hover:bg-[#1e1e2e]"}`}
+            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "keys" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
             Keys
           </button>
           <button
             onClick={() => setActiveTab("settings")}
-            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "settings" ? "bg-indigo-500" : "hover:bg-[#1e1e2e]"}`}
+            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "settings" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
             Settings
           </button>
         </nav>
 
-        <div className="border-t border-[#1e1e2e] pt-4">
+        <div className="border-t border-[#2a2a3a] pt-4">
           <div className="px-4 py-2 text-sm text-gray-400">
             Logged in as <span className="text-white">{user.name}</span>
           </div>
@@ -152,31 +152,31 @@ export default function DashboardPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4 mb-8">
-          <div className="bg-[#12121a] border border-[#1e1e2e] rounded-xl p-4">
+          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
             <div className="text-gray-400 text-sm">Total Users</div>
-            <div className="text-2xl font-bold">{users.length}</div>
+            <div className="text-2xl font-bold text-white">{users.length}</div>
           </div>
-          <div className="bg-[#12121a] border border-[#1e1e2e] rounded-xl p-4">
+          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
             <div className="text-gray-400 text-sm">Active Keys</div>
-            <div className="text-2xl font-bold">{users.length}</div>
+            <div className="text-2xl font-bold text-white">{users.length}</div>
           </div>
-          <div className="bg-[#12121a] border border-[#1e1e2e] rounded-xl p-4">
+          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
             <div className="text-gray-400 text-sm">Banned</div>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold text-white">0</div>
           </div>
-          <div className="bg-[#12121a] border border-[#1e1e2e] rounded-xl p-4">
+          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
             <div className="text-gray-400 text-sm">Online</div>
             <div className="text-2xl font-bold text-green-400">0</div>
           </div>
         </div>
 
         {/* Users Table */}
-        <div className="bg-[#12121a] border border-[#1e1e2e] rounded-xl overflow-hidden">
-          <div className="p-4 border-b border-[#1e1e2e]">
-            <h2 className="text-xl font-semibold">User Management</h2>
+        <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl overflow-hidden">
+          <div className="p-4 border-b border-[#2a2a3a]">
+            <h2 className="text-xl font-semibold text-white">User Management</h2>
           </div>
           <table className="w-full">
-            <thead className="bg-[#0d0d12]">
+            <thead className="bg-[#18181f]">
               <tr>
                 <th className="text-left p-4 text-gray-400 font-medium">Username</th>
                 <th className="text-left p-4 text-gray-400 font-medium">Email</th>
@@ -195,8 +195,8 @@ export default function DashboardPage() {
                 </tr>
               ) : (
                 users.map((u) => (
-                  <tr key={u.id} className="border-t border-[#1e1e2e] hover:bg-[#1a1a24]">
-                    <td className="p-4">{u.username}</td>
+                  <tr key={u.id} className="border-t border-[#2a2a3a] hover:bg-[#222230]">
+                    <td className="p-4 text-white">{u.username}</td>
                     <td className="p-4 text-gray-400">{u.email}</td>
                     <td className="p-4 font-mono text-sm text-cyan-400">{u.key}</td>
                     <td className="p-4 text-gray-400">{u.createdAt}</td>
@@ -224,8 +224,8 @@ export default function DashboardPage() {
       {/* Add User Modal */}
       {showAddUser && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-[#12121a] border border-[#1e1e2e] rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Create New User</h2>
+          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4 text-white">Create New User</h2>
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Username</label>
@@ -233,7 +233,7 @@ export default function DashboardPage() {
                   type="text"
                   value={newUser.username}
                   onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#0a0a0f] border border-[#1e1e2e] rounded-lg focus:outline-none focus:border-indigo-500"
+                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
                   required
                 />
               </div>
@@ -243,7 +243,7 @@ export default function DashboardPage() {
                   type="email"
                   value={newUser.email}
                   onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#0a0a0f] border border-[#1e1e2e] rounded-lg focus:outline-none focus:border-indigo-500"
+                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
                   required
                 />
               </div>
@@ -252,7 +252,7 @@ export default function DashboardPage() {
                 <select
                   value={newUser.expires}
                   onChange={(e) => setNewUser({ ...newUser, expires: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#0a0a0f] border border-[#1e1e2e] rounded-lg focus:outline-none focus:border-indigo-500"
+                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
                 >
                   <option value="never">Never</option>
                   <option value="1day">1 Day</option>
@@ -265,7 +265,7 @@ export default function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddUser(false)}
-                  className="flex-1 py-2 bg-[#1e1e2e] hover:bg-[#2a2a3a] rounded-lg transition"
+                  className="flex-1 py-2 bg-[#2a2a3a] hover:bg-[#3a3a4a] rounded-lg transition"
                 >
                   Cancel
                 </button>

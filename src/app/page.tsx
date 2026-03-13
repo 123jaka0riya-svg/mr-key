@@ -101,9 +101,9 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#0a0a0f] text-white">
+    <main className="min-h-screen bg-[#121218] text-white">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-md border-b border-[#1e1e2e]">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#121218]/90 backdrop-blur-md border-b border-[#2a2a3a]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
@@ -145,13 +145,13 @@ export default function Home() {
             <a href="/register" className="px-8 py-4 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-lg font-semibold transition hover:shadow-lg hover:shadow-indigo-500/25">
               Start for free
             </a>
-            <a href="/docs" className="px-8 py-4 bg-[#1e1e2e] hover:bg-[#2a2a3a] rounded-lg text-lg font-semibold transition border border-[#2a2a3a]">
+            <a href="/docs" className="px-8 py-4 bg-[#2a2a3a] hover:bg-[#3a3a4a] rounded-lg text-lg font-semibold transition border border-[#3a3a4a]">
               View Documentation
             </a>
           </div>
           <div className="mt-16">
-            <div className="relative rounded-xl overflow-hidden border border-[#1e1e2e] bg-[#12121a]">
-              <div className="aspect-video flex items-center justify-center text-gray-500">
+            <div className="relative rounded-xl overflow-hidden border border-[#2a2a3a] bg-[#1a1a22]">
+              <div className="aspect-video flex items-center justify-center text-gray-400">
                 <span className="text-2xl">[Dashboard Preview]</span>
               </div>
             </div>
@@ -160,16 +160,16 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-4 bg-[#0d0d12]">
+      <section id="features" className="py-20 px-4 bg-[#18181f]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-4">Everything you need to succeed.</h2>
           <p className="text-gray-400 text-center mb-16">A comprehensive suite of integrated tools for authentication, monetization, and user engagement.</p>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <div key={index} className="p-6 bg-[#12121a] rounded-xl border border-[#1e1e2e] hover:border-indigo-500/50 transition group">
+              <div key={index} className="p-6 bg-[#1a1a22] rounded-xl border border-[#2a2a3a] hover:border-indigo-500/50 transition group">
                 <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-2 group-hover:text-indigo-400 transition">{feature.title}</h3>
+                <h3 className="text-xl font-semibold mb-2 text-white group-hover:text-indigo-400 transition">{feature.title}</h3>
                 <p className="text-gray-400">{feature.description}</p>
               </div>
             ))}
@@ -196,7 +196,7 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-4 bg-[#0d0d12]">
+      <section className="py-20 px-4 bg-[#18181f]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-16">Get Started in 3 Steps.</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -228,14 +228,14 @@ export default function Home() {
           </p>
           <div className="flex flex-col md:flex-row justify-center gap-8 items-center">
             <div className="w-48 h-80 bg-gradient-to-b from-indigo-600 to-purple-600 rounded-3xl flex items-center justify-center">
-              <span className="text-white/50">[Mobile Mockup]</span>
+              <span className="text-white/70">[Mobile Mockup]</span>
             </div>
             <div className="flex flex-col gap-4">
-              <a href="#" className="px-6 py-3 bg-black rounded-xl flex items-center gap-3 hover:bg-gray-900 transition w-fit">
+              <a href="#" className="px-6 py-3 bg-[#2a2a3a] rounded-xl flex items-center gap-3 hover:bg-[#3a3a4a] transition w-fit">
                 <span className="text-2xl">🍎</span>
                 <span>App Store</span>
               </a>
-              <a href="#" className="px-6 py-3 bg-black rounded-xl flex items-center gap-3 hover:bg-gray-900 transition w-fit">
+              <a href="#" className="px-6 py-3 bg-[#2a2a3a] rounded-xl flex items-center gap-3 hover:bg-[#3a3a4a] transition w-fit">
                 <span className="text-2xl">▶</span>
                 <span>Google Play</span>
               </a>
@@ -245,7 +245,7 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 px-4 bg-[#0d0d12]">
+      <section id="pricing" className="py-20 px-4 bg-[#18181f]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-4">Perfect plans for your needs.</h2>
           <p className="text-gray-400 text-center mb-8">Flexible options for teams of all sizes.</p>
@@ -254,7 +254,7 @@ export default function Home() {
             <span className={!isYearly ? "text-white" : "text-gray-500"}>Monthly</span>
             <button 
               onClick={() => setIsYearly(!isYearly)}
-              className={`w-14 h-8 rounded-full transition ${isYearly ? "bg-indigo-500" : "bg-[#1e1e2e]"}`}
+              className={`w-14 h-8 rounded-full transition ${isYearly ? "bg-indigo-500" : "bg-[#2a2a3a]"}`}
             >
               <div className={`w-6 h-6 bg-white rounded-full transition ${isYearly ? "translate-x-7" : "translate-x-1"}`} />
             </button>
@@ -269,8 +269,8 @@ export default function Home() {
                 key={index} 
                 className={`p-6 rounded-xl border transition relative ${
                   plan.popular 
-                    ? "bg-[#12121a] border-indigo-500 shadow-lg shadow-indigo-500/10" 
-                    : "bg-[#12121a] border-[#1e1e2e] hover:border-indigo-500/50"
+                    ? "bg-[#1a1a22] border-indigo-500 shadow-lg shadow-indigo-500/10" 
+                    : "bg-[#1a1a22] border-[#2a2a3a] hover:border-indigo-500/50"
                 }`}
               >
                 {plan.popular && (
@@ -278,7 +278,7 @@ export default function Home() {
                     Most Popular
                   </div>
                 )}
-                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                <h3 className="text-xl font-semibold mb-2 text-white">{plan.name}</h3>
                 <div className="mb-4">
                   <span className="text-4xl font-bold">{plan.price}</span>
                   <span className="text-gray-400">{plan.period}</span>
@@ -296,7 +296,7 @@ export default function Home() {
                   className={`block text-center py-3 rounded-lg font-semibold transition ${
                     plan.popular 
                       ? "bg-indigo-500 hover:bg-indigo-600" 
-                      : "bg-[#1e1e2e] hover:bg-[#2a2a3a]"
+                      : "bg-[#2a2a3a] hover:bg-[#3a3a4a]"
                   }`}
                 >
                   {plan.cta}
@@ -316,16 +316,16 @@ export default function Home() {
           <h2 className="text-4xl font-bold text-center mb-12">Frequently asked questions</h2>
           <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <div key={index} className="border border-[#1e1e2e] rounded-xl overflow-hidden">
+              <div key={index} className="border border-[#2a2a3a] rounded-xl overflow-hidden">
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full p-4 flex items-center justify-between bg-[#12121a] hover:bg-[#1a1a24] transition"
+                  className="w-full p-4 flex items-center justify-between bg-[#1a1a22] hover:bg-[#222230] transition"
                 >
                   <span className="font-semibold">{faq.question}</span>
                   <span className={`transform transition ${openFaq === index ? "rotate-180" : ""}`}>▼</span>
                 </button>
                 {openFaq === index && (
-                  <div className="p-4 bg-[#0d0d12] text-gray-400">
+                  <div className="p-4 bg-[#18181f] text-gray-300">
                     {faq.answer}
                   </div>
                 )}
@@ -336,7 +336,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 border-t border-[#1e1e2e]">
+      <footer className="py-12 px-4 border-t border-[#2a2a3a]">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
