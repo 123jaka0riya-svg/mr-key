@@ -32,9 +32,9 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
             <div className="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">K</span>
+              <span className="text-white font-bold text-xl">M</span>
             </div>
-            <span className="text-2xl font-bold">KeyAuth</span>
+            <span className="text-2xl font-bold">MR Key</span>
           </Link>
           <h1 className="text-3xl font-bold mt-8 mb-2">Welcome back</h1>
           <p className="text-gray-400">Sign in to your account</p>

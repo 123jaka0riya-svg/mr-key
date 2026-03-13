@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 interface User {
   id: string;
@@ -20,8 +19,8 @@ export default function DashboardPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [showAddUser, setShowAddUser] = useState(false);
   const [newUser, setNewUser] = useState({ username: "", email: "", expires: "never" });
-  const [appName, setAppName] = useState("My Application");
-  const [activeTab, setActiveTab] = useState("users");
+  const [appName, setAppName] = useState("MR Key");
+  const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -90,9 +89,9 @@ export default function DashboardPage() {
       <div className="fixed left-0 top-0 h-full w-64 bg-[#1a1a22] border-r border-[#2a2a3a] p-4 flex flex-col">
         <div className="flex items-center gap-2 mb-8">
           <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">K</span>
+            <span className="text-white font-bold text-lg">M</span>
           </div>
-          <span className="text-xl font-bold">KeyAuth</span>
+          <span className="text-xl font-bold">{appName}</span>
         </div>
 
         <nav className="flex-1 space-y-2">
@@ -137,95 +136,258 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <div className="ml-64 p-8">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">{appName}</h1>
-            <p className="text-gray-400">Application Dashboard</p>
-          </div>
-          <button
-            onClick={() => setShowAddUser(true)}
-            className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold transition"
-          >
-            + Add User
-          </button>
-        </div>
+        {/* Overview Tab */}
+        {activeTab === "overview" && (
+          <>
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h1 className="text-3xl font-bold">{appName}</h1>
+                <p className="text-gray-400">Application Dashboard</p>
+              </div>
+            </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-4 gap-4 mb-8">
-          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
-            <div className="text-gray-400 text-sm">Total Users</div>
-            <div className="text-2xl font-bold text-white">{users.length}</div>
-          </div>
-          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
-            <div className="text-gray-400 text-sm">Active Keys</div>
-            <div className="text-2xl font-bold text-white">{users.length}</div>
-          </div>
-          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
-            <div className="text-gray-400 text-sm">Banned</div>
-            <div className="text-2xl font-bold text-white">0</div>
-          </div>
-          <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
-            <div className="text-gray-400 text-sm">Online</div>
-            <div className="text-2xl font-bold text-green-400">0</div>
-          </div>
-        </div>
+            <div className="grid grid-cols-4 gap-4 mb-8">
+              <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
+                <div className="text-gray-400 text-sm">Total Users</div>
+                <div className="text-2xl font-bold text-white">{users.length}</div>
+              </div>
+              <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
+                <div className="text-gray-400 text-sm">Active Keys</div>
+                <div className="text-2xl font-bold text-white">{users.length}</div>
+              </div>
+              <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
+                <div className="text-gray-400 text-sm">Banned</div>
+                <div className="text-2xl font-bold text-white">0</div>
+              </div>
+              <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
+                <div className="text-gray-400 text-sm">Online</div>
+                <div className="text-2xl font-bold text-green-400">0</div>
+              </div>
+            </div>
 
-        {/* Users Table */}
-        <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl overflow-hidden">
-          <div className="p-4 border-b border-[#2a2a3a]">
-            <h2 className="text-xl font-semibold text-white">User Management</h2>
-          </div>
-          <table className="w-full">
-            <thead className="bg-[#18181f]">
-              <tr>
-                <th className="text-left p-4 text-gray-400 font-medium">Username</th>
-                <th className="text-left p-4 text-gray-400 font-medium">Email</th>
-                <th className="text-left p-4 text-gray-400 font-medium">Key</th>
-                <th className="text-left p-4 text-gray-400 font-medium">Created</th>
-                <th className="text-left p-4 text-gray-400 font-medium">Expires</th>
-                <th className="text-left p-4 text-gray-400 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="p-8 text-center text-gray-400">
-                    No users yet. Click &quot;Add User&quot; to create one.
-                  </td>
-                </tr>
-              ) : (
-                users.map((u) => (
-                  <tr key={u.id} className="border-t border-[#2a2a3a] hover:bg-[#222230]">
-                    <td className="p-4 text-white">{u.username}</td>
-                    <td className="p-4 text-gray-400">{u.email}</td>
-                    <td className="p-4 font-mono text-sm text-cyan-400">{u.key}</td>
-                    <td className="p-4 text-gray-400">{u.createdAt}</td>
-                    <td className="p-4">
-                      <span className={u.expires === "Never" ? "text-green-400" : "text-gray-400"}>
-                        {u.expires}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <button
-                        onClick={() => deleteUser(u.id)}
-                        className="text-red-400 hover:text-red-300 text-sm"
-                      >
-                        Delete
-                      </button>
-                    </td>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6">
+                <h3 className="text-lg font-semibold mb-4">Quick Stats</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Total Licenses</span>
+                    <span className="text-white">{users.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Active</span>
+                    <span className="text-green-400">{users.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Expired</span>
+                    <span className="text-red-400">0</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6">
+                <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
+                <div className="space-y-3 text-gray-400">
+                  <p>No recent activity</p>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Users Tab */}
+        {activeTab === "users" && (
+          <>
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h1 className="text-3xl font-bold">User Management</h1>
+                <p className="text-gray-400">Manage your application users</p>
+              </div>
+              <button
+                onClick={() => setShowAddUser(true)}
+                className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold transition"
+              >
+                + Add User
+              </button>
+            </div>
+
+            <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-[#18181f]">
+                  <tr>
+                    <th className="text-left p-4 text-gray-400 font-medium">Username</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Email</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Key</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Created</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Expires</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Actions</th>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody>
+                  {users.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="p-8 text-center text-gray-400">
+                        No users yet. Click &quot;Add User&quot; to create one.
+                      </td>
+                    </tr>
+                  ) : (
+                    users.map((u) => (
+                      <tr key={u.id} className="border-t border-[#2a2a3a] hover:bg-[#222230]">
+                        <td className="p-4 text-white">{u.username}</td>
+                        <td className="p-4 text-gray-400">{u.email}</td>
+                        <td className="p-4 font-mono text-sm text-cyan-400">{u.key}</td>
+                        <td className="p-4 text-gray-400">{u.createdAt}</td>
+                        <td className="p-4">
+                          <span className={u.expires === "Never" ? "text-green-400" : "text-gray-400"}>
+                            {u.expires}
+                          </span>
+                        </td>
+                        <td className="p-4">
+                          <button
+                            onClick={() => deleteUser(u.id)}
+                            className="text-red-400 hover:text-red-300 text-sm"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+
+        {/* Keys Tab */}
+        {activeTab === "keys" && (
+          <>
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h1 className="text-3xl font-bold">License Keys</h1>
+                <p className="text-gray-400">Manage your license keys</p>
+              </div>
+              <button
+                onClick={() => setShowAddUser(true)}
+                className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold transition"
+              >
+                + Generate Key
+              </button>
+            </div>
+
+            <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-[#18181f]">
+                  <tr>
+                    <th className="text-left p-4 text-gray-400 font-medium">Key</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">User</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Status</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Created</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Expires</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="p-8 text-center text-gray-400">
+                        No keys yet. Generate one to get started.
+                      </td>
+                    </tr>
+                  ) : (
+                    users.map((u) => (
+                      <tr key={u.id} className="border-t border-[#2a2a3a] hover:bg-[#222230]">
+                        <td className="p-4 font-mono text-sm text-cyan-400">{u.key}</td>
+                        <td className="p-4 text-white">{u.username}</td>
+                        <td className="p-4">
+                          <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Active</span>
+                        </td>
+                        <td className="p-4 text-gray-400">{u.createdAt}</td>
+                        <td className="p-4">
+                          <span className={u.expires === "Never" ? "text-green-400" : "text-gray-400"}>
+                            {u.expires}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+
+        {/* Settings Tab */}
+        {activeTab === "settings" && (
+          <>
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold">Settings</h1>
+              <p className="text-gray-400">Configure your application</p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6">
+                <h3 className="text-lg font-semibold mb-4">Application Settings</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Application Name</label>
+                    <input
+                      type="text"
+                      value={appName}
+                      onChange={(e) => setAppName(e.target.value)}
+                      className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6">
+                <h3 className="text-lg font-semibold mb-4">Security</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-white">HWID Lock</div>
+                      <div className="text-gray-400 text-sm">Bind license to hardware ID</div>
+                    </div>
+                    <button className="w-12 h-6 bg-indigo-500 rounded-full relative">
+                      <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-white">Two-Factor Auth</div>
+                      <div className="text-gray-400 text-sm">Require 2FA for all users</div>
+                    </div>
+                    <button className="w-12 h-6 bg-[#2a2a3a] rounded-full relative">
+                      <div className="w-5 h-5 bg-white rounded-full absolute left-0.5 top-0.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6">
+                <h3 className="text-lg font-semibold mb-4">API Settings</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">API Key</label>
+                    <input
+                      type="text"
+                      value="sk_live_xxxxxxxxxxxxxxxxxxxx"
+                      readOnly
+                      className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg text-gray-400 font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Add User Modal */}
       {showAddUser && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4 text-white">Create New User</h2>
+            <h2 className="text-xl font-bold mb-4 text-white">
+              {activeTab === "keys" ? "Generate New Key" : "Create New User"}
+            </h2>
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Username</label>
@@ -274,7 +436,7 @@ export default function DashboardPage() {
                   disabled={loading}
                   className="flex-1 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold transition disabled:opacity-50"
                 >
-                  {loading ? "Creating..." : "Create User"}
+                  {loading ? "Creating..." : "Create"}
                 </button>
               </div>
             </form>

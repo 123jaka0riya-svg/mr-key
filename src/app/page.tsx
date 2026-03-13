@@ -108,9 +108,9 @@ export default function Home() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">K</span>
+                <span className="text-white font-bold text-lg">M</span>
               </div>
-              <span className="text-xl font-bold">KeyAuth</span>
+              <span className="text-xl font-bold">MR Key</span>
             </div>
             <div className="hidden md:flex items-center gap-8">
               <a href="#features" className="text-gray-300 hover:text-white transition">Features</a>
@@ -341,9 +341,9 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">K</span>
+                <span className="text-white font-bold text-lg">M</span>
               </div>
-              <span className="text-xl font-bold">KeyAuth</span>
+              <span className="text-xl font-bold">MR Key</span>
             </div>
             <div className="flex gap-6 text-gray-400">
               <a href="#" className="hover:text-white transition">Privacy</a>
@@ -351,7 +351,7 @@ export default function Home() {
               <a href="#" className="hover:text-white transition">Support</a>
             </div>
             <div className="text-gray-500">
-              © 2026 KeyAuth. All rights reserved.
+              © 2026 MR Key. All rights reserved.
             </div>
           </div>
         </div>
