@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { DownloadCard } from "@/components/DownloadCard";
 
 interface User {
@@ -15,8 +14,6 @@ interface User {
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<{ email: string; name: string } | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [showAddUser, setShowAddUser] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
@@ -29,17 +26,11 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) {
-      router.push("/login");
-    } else {
-      setUser(JSON.parse(storedUser));
-      const storedUsers = localStorage.getItem("app_users");
-      if (storedUsers) {
-        setUsers(JSON.parse(storedUsers));
-      }
+    const storedUsers = localStorage.getItem("app_users");
+    if (storedUsers) {
+      setUsers(JSON.parse(storedUsers));
     }
-  }, [router]);
+  }, []);
 
   const handleCreateUser = (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,13 +153,6 @@ export default function DashboardPage() {
     localStorage.setItem("app_users", JSON.stringify(updated));
   };
 
-  const logout = () => {
-    localStorage.removeItem("user");
-    router.push("/");
-  };
-
-  if (!user) return null;
-
   return (
     <main className="min-h-screen bg-[#121218]">
       {/* Sidebar */}
@@ -209,14 +193,8 @@ export default function DashboardPage() {
 
         <div className="border-t border-[#2a2a3a] pt-4">
           <div className="px-4 py-2 text-sm text-gray-400">
-            Logged in as <span className="text-white">{user.name}</span>
+            Welcome to <span className="text-white">{appName}</span>
           </div>
-          <button
-            onClick={logout}
-            className="w-full text-left px-4 py-2 text-red-400 hover:bg-red-500/10 rounded-lg transition"
-          >
-            Logout
-          </button>
         </div>
       </div>
 
