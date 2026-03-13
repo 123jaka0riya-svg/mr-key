@@ -231,7 +231,7 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold text-white">{users.length}</div>
               </div>
               <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
-                <div className="text-gray-400 text-sm">Active Keys</div>
+                <div className="text-gray-400 text-sm">Active Users</div>
                 <div className="text-2xl font-bold text-white">{users.length}</div>
               </div>
               <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-4">
@@ -272,26 +272,26 @@ export default function DashboardPage() {
           </>
         )}
 
-        {/* Keys Tab */}
+        {/* Users Tab */}
         {activeTab === "users" && (
           <>
             <div className="flex justify-between items-center mb-8">
               <div>
                 <h1 className="text-3xl font-bold">Users</h1>
-                <p className="text-gray-400">Manage your license keys</p>
+                <p className="text-gray-400">Manage your users</p>
               </div>
               <button
                 onClick={() => setShowAddUser(true)}
                 className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold transition"
               >
-                + Generate Key
+                + Add User
               </button>
             </div>
 
             <div className="mb-4">
               <input
                 type="text"
-                placeholder="Search keys by username..."
+                placeholder="Search users by username..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-4 py-3 bg-[#1a1a22] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white placeholder-gray-500"
@@ -302,8 +302,8 @@ export default function DashboardPage() {
               <table className="w-full">
                 <thead className="bg-[#18181f]">
                   <tr>
-                    <th className="text-left p-4 text-gray-400 font-medium">Key</th>
-                    <th className="text-left p-4 text-gray-400 font-medium">User</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">License Key</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Username</th>
                     <th className="text-left p-4 text-gray-400 font-medium">Status</th>
                     <th className="text-left p-4 text-gray-400 font-medium">Created</th>
                     <th className="text-left p-4 text-gray-400 font-medium">Expires</th>
@@ -314,7 +314,7 @@ export default function DashboardPage() {
                   {users.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
                     <tr>
                       <td colSpan={6} className="p-8 text-center text-gray-400">
-                        {searchQuery ? "No keys found matching your search." : "No keys yet. Generate one to get started."}
+                        {searchQuery ? "No users found matching your search." : "No users yet. Add one to get started."}
                       </td>
                     </tr>
                   ) : (
@@ -429,7 +429,7 @@ export default function DashboardPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4 text-white">
-              Generate New Key
+              Generate New User
             </h2>
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
@@ -485,7 +485,7 @@ export default function DashboardPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4 text-white">
-              Edit Key
+              Edit User
             </h2>
             <form onSubmit={handleEditUser} className="space-y-4">
               <div>
