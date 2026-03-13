@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -18,18 +18,19 @@ export default function RegisterPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [licenseKey, setLicenseKey] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
 
-  useEffect(() => {
-    const storedUsers = localStorage.getItem("app_users");
-    if (storedUsers) {
-      setUsers(JSON.parse(storedUsers));
+  const generateKey = () => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let key = "";
+    for (let i = 0; i < 24; i++) {
+      if (i > 0 && i % 4 === 0) key += "-";
+      key += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-  }, []);
+    return key;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,13 +38,16 @@ export default function RegisterPage() {
     setError("");
     setSuccess(false);
 
-    if (!username || !password || !licenseKey) {
+    if (!username || !password) {
       setError("Please fill in all fields");
       setLoading(false);
       return;
     }
 
-    const existingUser = users.find(
+    const existingUsersJSON = localStorage.getItem("app_users");
+    const existingUsers: User[] = existingUsersJSON ? JSON.parse(existingUsersJSON) : [];
+
+    const existingUser = existingUsers.find(
       (u) => u.username.toLowerCase() === username.toLowerCase()
     );
 
@@ -53,28 +57,24 @@ export default function RegisterPage() {
       return;
     }
 
-    const keyMatch = users.find((u) => u.key.toLowerCase() === licenseKey.toLowerCase());
+    const key = generateKey();
+    const newUser: User = {
+      id: Date.now().toString(),
+      username: username,
+      password: password,
+      key: key,
+      createdAt: new Date().toISOString().split("T")[0],
+      expires: "Never",
+      level: 1,
+    };
 
-    if (!keyMatch) {
-      setError("Invalid license key");
-      setLoading(false);
-      return;
-    }
-
-    const updatedUsers = users.map((u) => {
-      if (u.key.toLowerCase() === licenseKey.toLowerCase()) {
-        return { ...u, username, password };
-      }
-      return u;
-    });
-
-    setUsers(updatedUsers);
+    const updatedUsers = [...existingUsers, newUser];
     localStorage.setItem("app_users", JSON.stringify(updatedUsers));
 
     localStorage.setItem("user", JSON.stringify({ 
       username, 
       name: username,
-      key: licenseKey
+      key: key
     }));
     
     setSuccess(true);
@@ -95,7 +95,7 @@ export default function RegisterPage() {
             <span className="text-2xl font-bold">MR Key</span>
           </Link>
           <h1 className="text-3xl font-bold mt-8 mb-2">Create your account</h1>
-          <p className="text-gray-400">Activate your license</p>
+          <p className="text-gray-400">Sign up to get started</p>
         </div>
 
         <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-8">
@@ -118,16 +118,6 @@ export default function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
                 placeholder="Create a password"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">License Key</label>
-              <input
-                type="text"
-                value={licenseKey}
-                onChange={(e) => setLicenseKey(e.target.value)}
-                className="w-full px-4 py-3 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white font-mono"
-                placeholder="XXXX-XXXX-XXXX-XXXX"
               />
             </div>
 
