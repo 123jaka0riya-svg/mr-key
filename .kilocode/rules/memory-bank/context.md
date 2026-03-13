@@ -13,6 +13,9 @@
 - [x] Built responsive dark-themed UI
 - [x] Verified build passes successfully
 - [x] Added Downloads page with SDK code generation (C#, Python, Node.js, PHP, VB.NET, Java)
+- [x] Removed duplicate Users tab, kept Keys tab only
+- [x] Added Edit functionality for keys (Edit button)
+- [x] Added custom date picker for license expiry (select any date)
 
 ## Current Structure
 
