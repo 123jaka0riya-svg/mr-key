@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const [appName, setAppName] = useState("MR Key");
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -209,6 +210,16 @@ export default function DashboardPage() {
               </button>
             </div>
 
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Search users by username..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 bg-[#1a1a22] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white placeholder-gray-500"
+              />
+            </div>
+
             <div className="bg-[#1a1a22] border border-[#2a2a3a] rounded-xl overflow-hidden">
               <table className="w-full">
                 <thead className="bg-[#18181f]">
@@ -222,14 +233,14 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.length === 0 ? (
+                  {users.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
                     <tr>
                       <td colSpan={6} className="p-8 text-center text-gray-400">
-                        No users yet. Click &quot;Add User&quot; to create one.
+                        {searchQuery ? "No users found matching your search." : "No users yet. Click \"Add User\" to create one."}
                       </td>
                     </tr>
                   ) : (
-                    users.map((u) => (
+                    users.filter(u => u.username.toLowerCase().includes(searchQuery.toLowerCase())).map((u) => (
                       <tr key={u.id} className="border-t border-[#2a2a3a] hover:bg-[#222230]">
                         <td className="p-4 text-white">{u.username}</td>
                         <td className="p-4 text-gray-400">{u.password}</td>
