@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { DownloadCard } from "@/components/DownloadCard";
 
 interface User {
   id: string;
@@ -119,6 +120,12 @@ export default function DashboardPage() {
             className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "settings" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
             Settings
+          </button>
+          <button
+            onClick={() => setActiveTab("downloads")}
+            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "downloads" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
+          >
+            Downloads
           </button>
         </nav>
 
@@ -387,6 +394,71 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </>
+        )}
+
+        {/* Downloads Tab */}
+        {activeTab === "downloads" && (
+          <>
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold">Downloads</h1>
+              <p className="text-gray-400">Download authentication SDK for your software</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <DownloadCard 
+                title="C# (.NET)"
+                language="csharp"
+                icon="C#"
+                description="For C# applications (.NET Framework/Core)"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="Python"
+                language="python"
+                icon="🐍"
+                description="For Python applications"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="Node.js"
+                language="nodejs"
+                icon="📦"
+                description="For Node.js/JavaScript applications"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="PHP"
+                language="php"
+                icon="🐘"
+                description="For PHP applications"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="VB.NET"
+                language="vbnet"
+                icon="VB"
+                description="For VB.NET applications"
+                appName={appName}
+              />
+              <DownloadCard 
+                title="Java"
+                language="java"
+                icon="☕"
+                description="For Java applications"
+                appName={appName}
+              />
+            </div>
+
+            <div className="mt-8 bg-[#1a1a22] border border-[#2a2a3a] rounded-xl p-6">
+              <h3 className="text-lg font-semibold mb-4">How to use</h3>
+              <ol className="list-decimal list-inside space-y-2 text-gray-300">
+                <li>Download the SDK for your programming language</li>
+                <li>Extract the files to your project folder</li>
+                <li>Open the code and replace <code className="bg-[#121218] px-2 py-1 rounded text-cyan-400">APP_NAME</code> with your app name: <span className="text-indigo-400 font-mono">{appName}</span></li>
+                <li>Build and run your application</li>
+              </ol>
             </div>
           </>
         )}
