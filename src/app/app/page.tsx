@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 interface User {
   id: string;
   username: string;
-  email: string;
+  password: string;
   key: string;
   createdAt: string;
   expires: string;
@@ -18,7 +18,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<{ email: string; name: string } | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [showAddUser, setShowAddUser] = useState(false);
-  const [newUser, setNewUser] = useState({ username: "", email: "", expires: "never" });
+  const [newUser, setNewUser] = useState({ username: "", password: "", expires: "never" });
   const [appName, setAppName] = useState("MR Key");
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ export default function DashboardPage() {
     const newUserData: User = {
       id: Date.now().toString(),
       username: newUser.username,
-      email: newUser.email,
+      password: newUser.password,
       key: key,
       createdAt: new Date().toISOString().split("T")[0],
       expires: newUser.expires === "never" ? "Never" : newUser.expires,
@@ -55,7 +55,7 @@ export default function DashboardPage() {
     setUsers(updatedUsers);
     localStorage.setItem("app_users", JSON.stringify(updatedUsers));
 
-    setNewUser({ username: "", email: "", expires: "never" });
+    setNewUser({ username: "", password: "", expires: "never" });
     setShowAddUser(false);
     setLoading(false);
   };
@@ -214,7 +214,7 @@ export default function DashboardPage() {
                 <thead className="bg-[#18181f]">
                   <tr>
                     <th className="text-left p-4 text-gray-400 font-medium">Username</th>
-                    <th className="text-left p-4 text-gray-400 font-medium">Email</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Password</th>
                     <th className="text-left p-4 text-gray-400 font-medium">Key</th>
                     <th className="text-left p-4 text-gray-400 font-medium">Created</th>
                     <th className="text-left p-4 text-gray-400 font-medium">Expires</th>
@@ -232,7 +232,7 @@ export default function DashboardPage() {
                     users.map((u) => (
                       <tr key={u.id} className="border-t border-[#2a2a3a] hover:bg-[#222230]">
                         <td className="p-4 text-white">{u.username}</td>
-                        <td className="p-4 text-gray-400">{u.email}</td>
+                        <td className="p-4 text-gray-400">{u.password}</td>
                         <td className="p-4 font-mono text-sm text-cyan-400">{u.key}</td>
                         <td className="p-4 text-gray-400">{u.createdAt}</td>
                         <td className="p-4">
@@ -400,11 +400,11 @@ export default function DashboardPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Email</label>
+                <label className="block text-sm font-medium mb-2">Password</label>
                 <input
-                  type="email"
-                  value={newUser.email}
-                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                  type="password"
+                  value={newUser.password}
+                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                   className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
                   required
                 />
