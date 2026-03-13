@@ -18,7 +18,7 @@ export default function DashboardPage() {
   const [showAddUser, setShowAddUser] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [newUser, setNewUser] = useState({ expires: "never", customDate: "" });
+  const [newUser, setNewUser] = useState({ username: "", password: "", confirmPassword: "", expires: "never", customDate: "" });
   const [editUser, setEditUser] = useState({ username: "", password: "", expires: "never", customDate: "" });
   const [appName, setAppName] = useState("MR Key");
   const [activeTab, setActiveTab] = useState("overview");
@@ -35,6 +35,12 @@ export default function DashboardPage() {
   const handleCreateUser = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    if (newUser.password !== newUser.confirmPassword) {
+      alert("Passwords do not match!");
+      setLoading(false);
+      return;
+    }
 
     const key = generateKey();
     let expireDate = newUser.expires === "never" ? "Never" : newUser.expires;
@@ -61,8 +67,8 @@ export default function DashboardPage() {
 
     const newUserData: User = {
       id: Date.now().toString(),
-      username: "Not Registered",
-      password: "Not Registered",
+      username: newUser.username,
+      password: newUser.password,
       key: key,
       createdAt: new Date().toISOString().split("T")[0],
       expires: expireDate,
@@ -73,7 +79,7 @@ export default function DashboardPage() {
     setUsers(updatedUsers);
     localStorage.setItem("app_users", JSON.stringify(updatedUsers));
 
-    setNewUser({ expires: "never", customDate: "" });
+    setNewUser({ username: "", password: "", confirmPassword: "", expires: "never", customDate: "" });
     setShowAddUser(false);
     setLoading(false);
   };
@@ -481,6 +487,39 @@ export default function DashboardPage() {
               Generate New User
             </h2>
             <form onSubmit={handleCreateUser} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Username</label>
+                <input
+                  type="text"
+                  value={newUser.username}
+                  onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                  placeholder="Enter username"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Password</label>
+                <input
+                  type="password"
+                  value={newUser.password}
+                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                  placeholder="Enter password"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Confirm Password</label>
+                <input
+                  type="password"
+                  value={newUser.confirmPassword}
+                  onChange={(e) => setNewUser({ ...newUser, confirmPassword: e.target.value })}
+                  className="w-full px-4 py-2 bg-[#121218] border border-[#2a2a3a] rounded-lg focus:outline-none focus:border-indigo-500 text-white"
+                  placeholder="Confirm password"
+                  required
+                />
+              </div>
               <div>
                 <label className="block text-sm font-medium mb-2">License Duration</label>
                 <select
