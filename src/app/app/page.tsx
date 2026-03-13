@@ -187,8 +187,8 @@ export default function DashboardPage() {
             Overview
           </button>
           <button
-            onClick={() => setActiveTab("keys")}
-            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "keys" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
+            onClick={() => setActiveTab("users")}
+            className={`w-full text-left px-4 py-2 rounded-lg transition ${activeTab === "users" ? "bg-indigo-500" : "hover:bg-[#2a2a3a]"}`}
           >
             Users
           </button>
@@ -273,7 +273,7 @@ export default function DashboardPage() {
         )}
 
         {/* Keys Tab */}
-        {activeTab === "keys" && (
+        {activeTab === "users" && (
           <>
             <div className="flex justify-between items-center mb-8">
               <div>
