@@ -1,26 +1,16 @@
 import { NextResponse } from "next/server";
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
-interface User {
-  id: string;
-  username: string;
-  password: string;
-  key: string;
-  createdAt: string;
-  expires: string;
-  level: number;
-}
-
-const getUsers = (): User[] => {
-  if (typeof global !== 'undefined' && (global as any).appUsers) {
-    return (global as any).appUsers;
+const generateKey = () => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let key = "";
+  for (let i = 0; i < 24; i++) {
+    if (i > 0 && i % 4 === 0) key += "-";
+    key += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  return [];
-};
-
-const setUsers = (users: User[]) => {
-  if (typeof global !== 'undefined') {
-    (global as any).appUsers = users;
-  }
+  return key;
 };
 
 export async function POST(request: Request) {
@@ -36,13 +26,12 @@ export async function POST(request: Request) {
         );
       }
 
-      const users = getUsers();
-      const user = users.find(
-        (u) => 
-          u.username.toLowerCase() === username.toLowerCase() && 
-          u.password === password &&
-          u.key
-      );
+      const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.username, username.toLowerCase()));
+
+      const user = result.find(u => u.password === password && u.key);
 
       if (user) {
         return NextResponse.json({
@@ -70,45 +59,36 @@ export async function POST(request: Request) {
         );
       }
 
-      const users = getUsers();
-      const existingUser = users.find(
-        (u) => u.username.toLowerCase() === username.toLowerCase()
-      );
+      const existing = await db
+        .select()
+        .from(users)
+        .where(eq(users.username, username.toLowerCase()));
 
-      if (existingUser) {
+      if (existing.length > 0) {
         return NextResponse.json(
           { success: false, message: "Username already exists" },
           { status: 400 }
         );
       }
 
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      let key = "";
-      for (let i = 0; i < 24; i++) {
-        if (i > 0 && i % 4 === 0) key += "-";
-        key += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
+      const key = generateKey();
 
-      const newUser: User = {
-        id: Date.now().toString(),
-        username,
+      await db.insert(users).values({
+        username: username.toLowerCase(),
         password,
         key,
         createdAt: new Date().toISOString().split("T")[0],
         expires: "Never",
         level: 1,
-      };
-
-      const updatedUsers = [...users, newUser];
-      setUsers(updatedUsers);
+      });
 
       return NextResponse.json({
         success: true,
         message: "Registration successful",
         user: {
-          username: newUser.username,
-          key: newUser.key,
-          expires: newUser.expires
+          username: username.toLowerCase(),
+          key,
+          expires: "Never"
         }
       });
     }
@@ -118,6 +98,7 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   } catch (error) {
+    console.error("Auth error:", error);
     return NextResponse.json(
       { success: false, message: "Server error" },
       { status: 500 }
