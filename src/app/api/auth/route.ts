@@ -1,7 +1,4 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
-import { users } from "@/db/schema";
-import { eq, like } from "drizzle-orm";
 
 const generateKey = () => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -20,8 +17,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { type, username, password, appname } = body;
 
-    const useDb = db !== null;
-
     if (type === "login") {
       if (!username || !password || !appname) {
         return NextResponse.json(
@@ -30,19 +25,9 @@ export async function POST(request: Request) {
         );
       }
 
-      let user: any = null;
-
-      if (useDb) {
-        const result = await db
-          .select()
-          .from(users)
-          .where(eq(users.username, username.toLowerCase()));
-        user = result.find((u: any) => u.password === password && u.key);
-      } else {
-        user = inMemoryUsers.find(
-          (u) => u.username.toLowerCase() === username.toLowerCase() && u.password === password && u.key
-        );
-      }
+      const user = inMemoryUsers.find(
+        (u) => u.username.toLowerCase() === username.toLowerCase() && u.password === password && u.key
+      );
 
       if (user) {
         return NextResponse.json({
@@ -70,17 +55,9 @@ export async function POST(request: Request) {
         );
       }
 
-      let existing: any[] = [];
-      if (useDb) {
-        existing = await db
-          .select()
-          .from(users)
-          .where(eq(users.username, username.toLowerCase()));
-      } else {
-        existing = inMemoryUsers.filter(
-          (u) => u.username.toLowerCase() === username.toLowerCase()
-        );
-      }
+      const existing = inMemoryUsers.filter(
+        (u) => u.username.toLowerCase() === username.toLowerCase()
+      );
 
       if (existing.length > 0) {
         return NextResponse.json(
@@ -91,6 +68,7 @@ export async function POST(request: Request) {
 
       const key = generateKey();
       const newUser = {
+        id: Date.now().toString(),
         username: username.toLowerCase(),
         password,
         key,
@@ -99,11 +77,7 @@ export async function POST(request: Request) {
         level: 1,
       };
 
-      if (useDb) {
-        await db.insert(users).values(newUser);
-      } else {
-        inMemoryUsers.push({ id: Date.now().toString(), ...newUser });
-      }
+      inMemoryUsers.push(newUser);
 
       return NextResponse.json({
         success: true,
@@ -117,17 +91,9 @@ export async function POST(request: Request) {
     }
 
     if (type === "getUsers") {
-      let allUsers: any[] = [];
-      
-      if (useDb) {
-        allUsers = await db.select().from(users);
-      } else {
-        allUsers = inMemoryUsers;
-      }
-
       return NextResponse.json({
         success: true,
-        users: allUsers
+        users: inMemoryUsers
       });
     }
 
